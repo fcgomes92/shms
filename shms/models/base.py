@@ -2,6 +2,9 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from sqlalchemy.orm.mapper import configure_mappers
+
+from shms import app
 from shms.database import session
 from shms.util import friendly_code
 
@@ -27,16 +30,16 @@ class Base(object):
                 for column in self.__table__.columns.keys()
             })
         self.updated = datetime.utcnow()
-        session().commit()
+        session().flush()
 
         if 'code' in self.__table__.columns.keys():
             if not self.code:
                 self.code = friendly_code.encode(int(self.id))
-                session().commit()
+                session().flush()
 
     def delete(self):
         session().delete(self)
-        session().commit()
+        session().flush()
 
     @declared_attr
     def __tablename__(self):
@@ -62,3 +65,7 @@ class Base(object):
 
 
 BaseModel = declarative_base(cls=Base)
+
+BaseModel.metadata.create_all(app.engine)
+# maps the abstract user class
+configure_mappers()
