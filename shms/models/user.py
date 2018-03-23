@@ -1,8 +1,7 @@
 import hashlib
 import uuid
 
-from sqlalchemy import Column, Integer, Sequence, String
-from sqlalchemy.ext.declarative import AbstractConcreteBase
+from sqlalchemy import Column, Integer, Sequence, String, ForeignKey
 
 from shms.database import session
 from shms.util import auth
@@ -10,9 +9,12 @@ from shms.util import auth
 from shms.models.base import BaseModel
 
 
-class User(AbstractConcreteBase, BaseModel):
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True,
-                autoincrement=True)
+class User(BaseModel):
+    __table_name__ = 'user'
+
+    id = Column(Integer, Sequence('user_id_seq'), primary_key=True, autoincrement=True)
+    company_id = Column(ForeignKey('company.id'))
+
     email = Column(String(128), unique=True)
     first_name = Column(String(128))
     last_name = Column(String(128))

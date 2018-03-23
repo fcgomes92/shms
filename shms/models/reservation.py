@@ -1,11 +1,13 @@
 from sqlalchemy import Column, Sequence, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import backref, relationship, validates
 
-from shms.models import BaseModel
+from shms.models.base import BaseModel
 
 
 class Reservation(BaseModel):
-    id = Column(Integer, Sequence('reservation_id_seq'), primary_key=True, autoincrement=True)
+    __table_name__ = 'reservation'
+
+    id = Column(Integer, Sequence('reservation_id_seq'), primary_key=True, autoincrement=False)
     room_id = Column(Integer, ForeignKey('room.id'), primary_key=True)
     client_id = Column(Integer, ForeignKey('client.id'), primary_key=True)
     guests = Column(Integer, default=1)
@@ -14,18 +16,8 @@ class Reservation(BaseModel):
 
     code = Column(String(256), index=True, unique=True)
 
-    room = relationship('Room',
-                        lazy="subquery",
-                        cascade='save-update, merge, expunge',
-                        backref=backref('reservations',
-                                        lazy="subquery",
-                                        cascade="all, delete-orphan", ))
-    client = relationship('Client',
-                          lazy="subquery",
-                          cascade='save-update, merge, expunge',
-                          backref=backref('reservations',
-                                          lazy="subquery",
-                                          cascade="all, delete-orphan", ))
+    room = relationship('Room', lazy="subquery", cascade='save-update, merge, expunge')
+    client = relationship('Client', lazy="subquery", cascade='save-update, merge, expunge')
 
     @validates
     def validates_guests(self, key, guests):

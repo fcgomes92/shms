@@ -2,9 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from sqlalchemy.orm.mapper import configure_mappers
 
-from shms import app
 from shms.database import session
 from shms.util import friendly_code
 
@@ -65,7 +63,3 @@ class Base(object):
 
 
 BaseModel = declarative_base(cls=Base)
-
-BaseModel.metadata.create_all(app.engine)
-# maps the abstract user class
-configure_mappers()
