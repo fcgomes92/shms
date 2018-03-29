@@ -34,8 +34,8 @@ JWT_ALGORITHM = config('JWT_ALGORITHM', cast=str, default='HS256')
 storage_path = config('STORAGE_PATH', './images')
 
 # set the db connection
-engine = create_engine(config('DATABASE_URI', None), echo=False)
-Session = scoped_session(sessionmaker(bind=engine))
+engine = create_engine(config('DATABASE_URI', None), echo=False, convert_unicode=True)
+Session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False, ))
 
 configure_logging()
 map_models()
