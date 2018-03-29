@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Sequence, Integer, String, ForeignKey, DateTime
-from sqlalchemy.orm import backref, relationship, validates
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Sequence, String
+from sqlalchemy.orm import relationship, validates
 
 from shms.models.base import BaseModel
 
@@ -13,6 +13,7 @@ class Reservation(BaseModel):
     guests = Column(Integer, default=1)
     checkin = Column(DateTime, nullable=False)
     checkout = Column(DateTime, nullable=False)
+    value = Column(Float, default=0.0)
 
     code = Column(String(256), index=True, unique=True)
 

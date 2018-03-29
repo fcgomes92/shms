@@ -1,12 +1,11 @@
 import hashlib
 import uuid
 
-from sqlalchemy import Column, Integer, Sequence, String, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, Sequence, String
 
 from shms.database import session
-from shms.util import auth
-
 from shms.models.base import BaseModel
+from shms.util import auth
 
 
 class User(BaseModel):

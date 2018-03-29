@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Sequence, Integer, String, ForeignKey, Boolean
-from sqlalchemy.orm import backref, relationship, validates
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, Sequence, String, Text
+from sqlalchemy.orm import relationship, validates
 
 from shms.models.base import BaseModel
 
@@ -17,6 +17,7 @@ class Room(BaseModel):
     vacancies = Column(Integer, default=0)
     shared = Column(Boolean, default=False)
     code = Column(String(256), index=True, unique=True)
+    description = Column(Text, default='', nullable=True)
 
     reservations = relationship('Reservation', lazy="subquery", cascade='save-update, merge, expunge')
     features = relationship('Feature', lazy="subquery", cascade='save-update, merge, expunge')

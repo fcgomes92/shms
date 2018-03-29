@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Sequence, Integer, String
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy import Column, Integer, Sequence, String
+from sqlalchemy.orm import relationship
 
 from shms.models.base import BaseModel
 

@@ -1,9 +1,8 @@
-from decouple import config
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, configure_mappers, scoped_session
-
 import logging
+
+from decouple import config
+from sqlalchemy import create_engine
+from sqlalchemy.orm import configure_mappers, scoped_session, sessionmaker
 
 
 def map_models():
