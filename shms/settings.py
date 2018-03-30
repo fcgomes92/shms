@@ -5,14 +5,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import configure_mappers, scoped_session, sessionmaker
 
 
-def map_models():
+def map_models(bind_engine):
     import shms.models
-    shms.models.BaseModel.metadata.create_all(bind=engine)
+    shms.models.BaseModel.metadata.create_all(bind=bind_engine)
     # maps the abstract user class
     configure_mappers()
 
 
 def configure_logging():
+    global DEBUG
     _default_logging_format = '[%(levelname)s][%(asctime)s][%(name)s]: %(message)s'
     if DEBUG:
         logging.basicConfig(level=config('LOGGING_LEVEL', cast=int, default=logging.ERROR),
@@ -36,6 +37,6 @@ storage_path = config('STORAGE_PATH', './images')
 # set the db connection
 engine = create_engine(config('DATABASE_URI', None), echo=False, convert_unicode=True)
 Session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False, ))
+map_models(engine)
 
 configure_logging()
-map_models()

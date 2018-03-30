@@ -2,7 +2,6 @@
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
 *$py.class
 
 # C extensions
@@ -116,3 +115,5 @@ venv.bak/
 pyvenv.cfg
 pip-selfcheck.json
 .idea
+settings.ini
+*.sqlite
