@@ -1,9 +1,10 @@
+from shms.app import app
+
 _session = None
 
 
 def session():
-    from shms import settings
     global _session
     if not _session:
-        _session = settings.Session()
+        _session = app.config.Session()
     return _session

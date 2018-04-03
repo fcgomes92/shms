@@ -1,20 +1,17 @@
-from flask import Flask
-from flask_cors import CORS
+from shms.application import SHMSApplication
 
 app = None
 
 
 def create_app():
+    global app
     # create the app
-
-    api = Flask(__name__)
-
-    CORS(api)
-
-    api.config.from_object('shms.settings')
-
-    return api
+    app = SHMSApplication()
+    return app
 
 
 def get_app():
-    return create_app()
+    if not app:
+        return create_app().app
+    else:
+        return app.app
