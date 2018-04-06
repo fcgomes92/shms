@@ -1,3 +1,4 @@
-class ROUTES(object):
-    users = '/users'
-    users_auth = '/users/auth'
+ROUTES = {
+    'users': '/users',
+    'users_auth': '/users/auth',
+}

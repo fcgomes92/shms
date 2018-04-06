@@ -1,11 +1,10 @@
+import json
+from logging import getLogger
+
 import falcon
 
-from shms.util.response import format_response
 from shms.hooks import require_auth
-
-import json
-
-from logging import getLogger
+from shms.util.response import format_response
 
 logger = getLogger(__name__)
 

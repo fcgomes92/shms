@@ -1,30 +1,50 @@
 import logging
 
-from flask import Flask
-from flask_cors import CORS
-from sqlalchemy import create_engine
-from sqlalchemy.orm import configure_mappers, scoped_session, sessionmaker
+import falcon
+from falcon_cors import CORS
+
+from shms import settings
+from shms.database import Database
+
+app = None
+
+
+class Config(object):
+    DEBUG = True
+    DATABASE_URI = None
+    LOGGING_LEVEL = None
+    LOGGING_FORMAT = None
 
 
 class SHMSApplication(object):
     def __init__(self):
-        self.app = Flask(__name__)
-        self.app.config.from_object('shms.settings')
-        self.config = self.app.config
+        self.config = self.set_config()
+        self.database = Database(database_url=self.config.DATABASE_URI)
+        self.app = falcon.API(middleware=self.register_middleware())
 
-        self.engine = create_engine(self.config['DATABASE_URI'], echo=False, convert_unicode=True)
-        self.Session = scoped_session(sessionmaker(bind=self.engine, autocommit=False, autoflush=False, ))
+    @staticmethod
+    def set_config():
+        config = Config()
 
-        self.configure_cors()
+        for key in dir(settings):
+            if key.isupper():
+                setattr(config, key, getattr(settings, key))
 
-    def configure_cors(self):
-        CORS(self.app)
+        return config
 
-    def map_models(self, bind_engine):
-        import shms.models
-        shms.models.BaseModel.metadata.create_all(bind=bind_engine)
-        # maps the abstract user class
-        configure_mappers()
+    @staticmethod
+    def register_middleware():
+        from shms.middleware import NonBlockingAuthentication, LoggerMiddleware
+        cors = CORS(allow_all_origins=True,
+                    allow_all_headers=True,
+                    allow_credentials_all_origins=True,
+                    allow_all_methods=True)
+
+        return [
+            cors.middleware,
+            NonBlockingAuthentication(),
+            LoggerMiddleware(logging.getLogger(__name__)),
+        ]
 
     def configure_logging(self):
         if self.config.DEBUG:
@@ -36,4 +56,8 @@ class SHMSApplication(object):
             logging.basicConfig(level=self.config.LOGGING_LEVEL,
                                 format=self.config.LOGGING_FORMAT)
 
-# app = SHMSApplication()
+
+try:
+    app = SHMSApplication()
+except Exception as e:
+    print(e)

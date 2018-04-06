@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import Column, DateTime
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
-from shms.database import session
+from shms.application import app
 from shms.util import friendly_code
 
 
@@ -18,26 +18,26 @@ class Base(object):
     def save(self):
         if not getattr(self, 'id', None):
             self.created = datetime.utcnow()
-            session().add(self)
+            app.database.session().add(self)
         else:
             cls = self.__class__
-            query = session().query(cls)
+            query = app.database.session().query(cls)
             query = query.filter(cls.id == self.id)
             query.update({
                 column: getattr(self, column)
                 for column in self.__table__.columns.keys()
             })
         self.updated = datetime.utcnow()
-        session().flush()
+        app.database.session().flush()
 
         if 'code' in self.__table__.columns.keys():
             if not self.code:
                 self.code = friendly_code.encode(int(self.id))
-                session().flush()
+                app.database.session().flush()
 
     def delete(self):
-        session().delete(self)
-        session().flush()
+        app.database.session().delete(self)
+        app.database.session().flush()
 
     @declared_attr
     def __tablename__(self):
@@ -45,19 +45,19 @@ class Base(object):
 
     @classmethod
     def get_all(cls):
-        return session().query(cls).all()
+        return app.database.session().query(cls).all()
 
     @classmethod
     def get_by_id(cls, model_id):
         if cls.id:
-            return session().query(cls).filter(cls.id == model_id).first()
+            return app.database.session().query(cls).filter(cls.id == model_id).first()
         else:
             return None
 
     @classmethod
     def get_by_code(cls, code):
         if getattr(cls, 'code', None):
-            return session().query(cls).filter(cls.code == code).first()
+            return app.database.session().query(cls).filter(cls.code == code).first()
         else:
             return None
 

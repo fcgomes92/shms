@@ -1,6 +1,6 @@
+import argparse
 import os
 import subprocess
-import argparse
 
 parser = argparse.ArgumentParser(description="Config the SHMS Application")
 parser.add_argument('-e', '--env', metavar='env', type=str, help='The env path', default='./.env')
@@ -21,10 +21,12 @@ def main():
     install_process.wait()
 
     with open(app_env_path, 'w') as file:
-        file.writelines("""STORAGE_PATH={root}/static
-DATABASE_URI=sqlite:///:memory:
-LOGGING_LEVEL=10
-DEBUG=True""".format(root=root))
+        file.writelines("""[settings]
+STORAGE_PATH = {root}/static
+DATABASE_URI = sqlite:///:memory:
+LOGGING_LEVEL = 10
+DEBUG = True
+""".format(root=root))
 
 
 if __name__ == '__main__':

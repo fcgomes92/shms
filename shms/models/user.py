@@ -3,7 +3,7 @@ import uuid
 
 from sqlalchemy import Column, ForeignKey, Integer, Sequence, String
 
-from shms.database import session
+from shms.application import app
 from shms.models.base import BaseModel
 from shms.util import auth
 
@@ -41,7 +41,7 @@ class User(BaseModel):
 
     @classmethod
     def get_by_email(cls, email):
-        return session().query(cls).filter(cls.email == email).first()
+        return app.database.session().query(cls).filter(cls.email == email).first()
 
     @classmethod
     def get_by_token(cls, token):

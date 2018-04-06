@@ -1,6 +1,6 @@
-import subprocess
-import os
 import argparse
+import os
+import subprocess
 
 root = os.path.abspath(os.path.dirname(__file__))
 
@@ -14,7 +14,7 @@ gunicorn_virtual_env = os.path.join(env_path, 'bin/gunicorn')
 
 
 def main():
-    p = subprocess.Popen((gunicorn_virtual_env, '--reload', 'shms.app:create_app()'))
+    p = subprocess.Popen((gunicorn_virtual_env, '--reload', 'shms.app:get_app()'))
     try:
         print('Starting server with: {}'.format(gunicorn_virtual_env))
         p.wait()
