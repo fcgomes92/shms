@@ -12,7 +12,7 @@ MarkupSafe==1.0
 marshmallow==2.15.0
 mimesis==2.0.0
 pluggy==0.6.0
-py==1.5.2
+py==1.10.0
 PyJWT==1.6.1
 pytest==3.4.2
 python-decouple==3.1
