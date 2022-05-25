@@ -13,7 +13,7 @@ marshmallow==2.15.0
 mimesis==2.0.0
 pluggy==0.6.0
 py==1.5.2
-PyJWT==1.6.1
+PyJWT==2.4.0
 pytest==3.4.2
 python-decouple==3.1
 python-mimeparse==1.6.0
